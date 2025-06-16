@@ -1,8 +1,8 @@
 import {Rgba} from "./Functions";
 
 export const COLOR = {
-    WHITE: [255,255,255,1] as [number,number,number,number],
-    BLACK: [1,1,1,1] as [number,number,number,number],
+    WHITE: [255,255,255] as [number,number,number],
+    BLACK: [1,1,1] as [number,number,number],
 }
 
 export enum MouseButton {
@@ -23,4 +23,15 @@ export enum TextAlignment {
     Left
 }
 
+export enum HorizontalTextAlignment {
+    Center,
+    Top,
+    Bottom
+}
+
 export const HAND_CURSOR = love.mouse.getSystemCursor("hand")
+
+
+export const ErrMessage: string[] = [
+    "invalid ImageId: "
+]

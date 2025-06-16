@@ -1,70 +1,84 @@
-import {GuiObject} from "./GuiObject";
-import {rgbaColor} from "../Utils/Functions";
-import {COLOR, TextAlignment} from "../Utils/Constantes";
-import {AlignMode, Font, newFont} from "love.graphics";
-import {RGBA} from "love.math";
+import {GuiObject} from "./GuiObject"
+import {Vector2} from "./Vector2"
+import {AlignMode, Font, newFont} from "love.graphics"
+import {RGBA} from "love.math"
+import {rgbaColor} from "../Utils/Functions"
+import {COLOR, HorizontalTextAlignment} from "../Utils/Constantes"
+import {printStackTraceBundleOverride} from "typescript-to-lua/dist/transpilation/bundle";
 
-import {Vector2} from "./Vector2";
+export abstract class TextGuiObject extends GuiObject {
 
-export class TextGuiObject extends GuiObject {
+    protected abstract _absolutePosition: Vector2
+    protected abstract _position: Vector2
+    protected abstract textAbsolutePosition: Vector2;
+    protected abstract font: Font;
+    public abstract size: Vector2
+    public abstract text: string
 
-    public absolutePosition: Vector2;
-    public position: Vector2;
-    public size: Vector2;
-    public textColor: LuaMultiReturn<RGBA> = rgbaColor(...COLOR.BLACK);
-    public textVisible: boolean = true;
-    public alignMode: AlignMode = "center";
-    public parent: GuiObject;
+    public alignMode: AlignMode = "center"
+    public textColor: LuaMultiReturn<RGBA> = rgbaColor(...COLOR.BLACK)
+    public textVisible: boolean = true
 
-    public text: string;
-    private font: Font;
-    private textSize : number = 16;
-
-    constructor(text: string, parent: GuiObject) {
-        super();
+    private _textSize: number = 15;
+    private _horizontalAlignment: HorizontalTextAlignment = HorizontalTextAlignment.Top;
 
 
-        this.absolutePosition = parent.position;
-        this.position = parent.position;
-        this.size = parent.size;
 
-        this.text = text;
-        this.parent = parent as GuiObject;
-        this.font = newFont(this.textSize)
+    public get textSize(): number {
+        return this._textSize;
     }
 
-    public get getTextSize() {
-        return this.textSize;
-    }
-
-    public set setTextSize(value: number) {
-        this.textSize = value;
+    public set textSize(value: number) {
+        this._textSize = value
         this.font = newFont(value)
     }
 
-    public setFont(font: Font) {
-        this.font = font;
+    public get horizontalAlignment(): number {
+        return this._horizontalAlignment;
     }
 
-    public update(dt: number) {
+    /*
+    set textSize before horizontalAlignment or you will get alignment error
+    * */
+    public set horizontalAlignment(value: number) {
+      this._horizontalAlignment = value;
+      this.updateTextPosition(value);
     }
 
-    public draw() {
+    private updateTextPosition(value: HorizontalTextAlignment) {
+        const font = this.font
+        const [_, wrappedLines] = font.getWrap(this.text, this.size.x)
+        const numLines = wrappedLines.length
+        const textHeight = font.getHeight() * font.getLineHeight() * numLines
 
-        love.graphics.push('transform');
-        love.graphics.translate(this.parent.absolutePosition.x, this.parent.absolutePosition.y);
-        love.graphics.setFont(this.font);
+        switch (value) {
+            case HorizontalTextAlignment.Center:
+                this.textAbsolutePosition.y = this.textAbsolutePosition.y + (this.size.y - textHeight) / 2
+                break
+            case HorizontalTextAlignment.Bottom:
+                this.textAbsolutePosition.y = this.textAbsolutePosition.y + (this.size.y - textHeight)
+                break
+        }
+    }
 
+    update(dt: number): void {
+        // override optional
+    }
+
+    public draw(): void {
+        super.draw()
+
+        if (!this.textVisible) return
+
+        love.graphics.push("all")
+        love.graphics.setFont(this.font)
         love.graphics.printf(
-            [
-                this.textColor,
-                this.text,
-            ],
-            this.position.x,
-            this.position.y,
-            100,
+            [this.textColor, this.text],
+            this.textAbsolutePosition.x,
+            this.textAbsolutePosition.y,
+            this.size.x,
             this.alignMode
         )
-
+        love.graphics.pop()
     }
 }

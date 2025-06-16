@@ -4,8 +4,8 @@ import {rgbaColor} from "../Utils/Functions";
 import {RGBA} from "love.math";
 
 export abstract class GuiObject {
-    public abstract position: Vector2;
-    public abstract absolutePosition: Vector2;
+    protected abstract _position: Vector2;
+    protected abstract _absolutePosition: Vector2;
     public abstract size: Vector2;
 
     public parent: GuiObject | null = null;
@@ -14,11 +14,27 @@ export abstract class GuiObject {
     public fillMode: "line" | "fill" = "fill";
     public cornerRadius: Vector2 = new Vector2();
 
-
     public abstract update(dt: number): void
 
-    public _updateAbsolutePosition() {
-        this.absolutePosition = (this.parent?.absolutePosition ?? new Vector2())
+    public get absolutePosition(): Vector2 {
+        return this._absolutePosition;
+    }
+
+    public set absolutePosition(value: Vector2) {
+        this._absolutePosition = value;
+
+    }
+    public get position(): Vector2 {
+        return this._position;
+    }
+
+    public set position(value:Vector2) {
+        this._position = value;
+        this.absolutePosition = this._updateAbsolutePosition();
+    }
+
+    private _updateAbsolutePosition(): Vector2 {
+      return (this.parent?.absolutePosition ?? new Vector2())
             .add(this.position);
     }
 
@@ -45,6 +61,7 @@ export abstract class GuiObject {
         if (!this.visible) {
             return;
         }
+
 
         love.graphics.push("all")
 

@@ -1,5 +1,5 @@
 import {GameState} from "../Utils/Constantes";
-import {IGuiState, StateProperty} from "../Interfaces/IGuiState";
+import {IGuiState} from "../Interfaces/IGuiState";
 
 /** @noSelf */
 export function registerGUIState(state: GameState) {

@@ -2,14 +2,14 @@ import {GuiObject} from "../Classes/GuiObject";
 import {GameState} from "../Utils/Constantes";
 import {Rgba} from "../Utils/Functions";
 
-export interface StateProperty {
+export interface DrawStateProperty {
     BackgroundColor: LuaMultiReturn<Rgba>;
 }
 
 export interface IGuiState {
     instances: GuiObject[];
     state: GameState;
-    property: StateProperty;
+    drawStateProperty: DrawStateProperty;
 
 
 

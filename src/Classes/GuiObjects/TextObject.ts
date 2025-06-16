@@ -1,46 +1,25 @@
-import {GuiObject} from "../GuiObject";
-import {Vector2} from "../Vector2";
 import {TextGuiObject} from "../TextGuiObject";
-import {AlignMode, Font, newFont} from "love.graphics";
-import {RGBA} from "love.math";
-import {rgbaColor} from "../../Utils/Functions";
-import {COLOR} from "../../Utils/Constantes";
+import {Vector2} from "../Vector2";
+import {Font, newFont} from "love.graphics";
 
-export class TextObject extends GuiObject {
+export class TextObject extends TextGuiObject {
+    protected _absolutePosition: Vector2;
+    protected _position: Vector2;
+    protected font: Font;
+    protected textAbsolutePosition: Vector2;
+    size: Vector2;
+    text: string;
 
-    public absolutePosition: Vector2;
-    public position: Vector2;
-    public size: Vector2;
 
-    public alignMode: AlignMode = "center";
-    private font: Font;
-    public text: string;
-    public textColor: LuaMultiReturn<RGBA> = rgbaColor(...COLOR.BLACK);
-    private textSize: number = 15;
-    public textVisible: boolean = true;
-    public parent: GuiObject | null = null;
-
-    update(dt: number): void {
-    }
-
-    constructor(position: Vector2, size: Vector2, text: string) {
+    constructor(text: string, position: Vector2, size: Vector2) {
         super();
 
-        this.position = position;
+        this._absolutePosition = position;
+        this._position = position;
         this.size = size;
-        this.absolutePosition = position;
-
         this.text = text;
+
+        this.textAbsolutePosition = position.clone();
         this.font = newFont(this.textSize)
     }
-
-
-
-
-    setFont(font: Font): void {
-    }
-
-    set setTextSize(value: number) {
-    }
-
 }
