@@ -11,7 +11,7 @@ love.load = (): void => {
     UiStateController.setCurrentGameState(GameState.Menu)
 
     const b = new RectangleShape(new Vector2(100,100), new Vector2(100,100))
-    const ok = new ImageButton("AddToSqud.png", new Vector2(100,100))
+    const ok = new ImageButton("res/AddToSqud.png", new Vector2(100,100))
 
     const test = new TextButton("Hello, world", new Vector2(), new Vector2(100,100))
     test.textSize = 20;
