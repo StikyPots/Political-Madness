@@ -12,7 +12,7 @@ export class TextButton extends ClickableGuiObject {
     protected _absolutePosition: Vector2;
     protected _position: Vector2;
     public size: Vector2;
-    private text: string;
+    private text: string; //TODO: add the logic to change dynamically the text
 
     private textObject: TextObject;
 
@@ -28,7 +28,15 @@ export class TextButton extends ClickableGuiObject {
         this.textObject.parent = this;
     }
 
+    override set position(position: Vector2) {
+        super.position = position;
+        this.textObject.position = new Vector2();
+    }
 
+    override recalculateAbsolutePosition() {
+        super.recalculateAbsolutePosition();
+        this.textObject.recalculateAbsolutePosition();
+    }
 
     get horizontalAlignment(): number {
         return this.textObject.horizontalAlignment;

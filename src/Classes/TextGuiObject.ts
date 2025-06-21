@@ -23,6 +23,12 @@ export abstract class TextGuiObject extends GuiObject {
     private _horizontalAlignment: HorizontalTextAlignment = HorizontalTextAlignment.Top;
 
 
+    set position(value: Vector2) {
+        this._position = value;
+        this.recalculateAbsolutePosition()
+        this.textAbsolutePosition = this.absolutePosition;
+    }
+
 
     public get textSize(): number {
         return this._textSize;

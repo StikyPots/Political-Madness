@@ -1,32 +1,45 @@
 import {UiStateController} from "./Controllers/UiStateController";
-import {GameState, HorizontalTextAlignment, MouseButton} from "./Utils/Constantes";
+import {GameState} from "./Utils/Constantes";
 import {Vector2} from "./Classes/Vector2";
 import {KeyConstant, Scancode} from "love.keyboard";
 import {ImageButton} from "./Classes/GuiObjects/ImageButton";
+import {Frame} from "./Classes/GuiObjects/Frame";
+import {TestComponent} from "./Controllers/GUIComponents/TestComponent";
 import {RectangleShape} from "./Classes/GuiObjects/RectangleShape";
-import {TextObject} from "./Classes/GuiObjects/TextObject";
-import {TextButton} from "./Classes/GuiObjects/TextButton";
+import {getAsset} from "node:sea";
+import {getResource} from "./Utils/Functions";
+
 
 love.load = (): void => {
     UiStateController.setCurrentGameState(GameState.Menu)
 
-    const b = new RectangleShape(new Vector2(100,100), new Vector2(100,100))
-    const ok = new ImageButton("res/AddToSqud.png", new Vector2(100,100))
 
-    const test = new TextButton("Hello, world", new Vector2(), new Vector2(100,100))
-    test.textSize = 20;
-    test.horizontalAlignment = HorizontalTextAlignment.Center
-
-    test.onMouseClick(MouseButton.LeftMouseButton, () => print("ok"))
-
-    UiStateController.registerGuiObjectToState(b, GameState.Menu)
-    UiStateController.registerGuiObjectToState(ok, GameState.Menu)
-    UiStateController.registerGuiObjectToState(test, GameState.Menu)
+    const imageButton = new ImageButton("res/AddToSqud.png", new Vector2())
+    imageButton.position = new Vector2(100, 100)
 
 
+
+
+
+    const testComponent = new TestComponent({
+        rect: new RectangleShape(new Vector2(), new Vector2(100, 100))
+    }, {})
+
+
+    const frame = new Frame(new Vector2(100, 10), new Vector2(100, 100))
+    frame.addChild(imageButton)
+
+    frame.visible = false
+
+
+
+
+    UiStateController.registerGuiObjectsForState(GameState.Menu, testComponent.registerComponent())
+    UiStateController.registerGuiObjectToState(frame, GameState.Menu)
 }
 
 love.update = (dt: number): void => {
+
 }
 
 

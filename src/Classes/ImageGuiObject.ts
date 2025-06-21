@@ -20,8 +20,8 @@ export abstract class ImageGuiObject extends GuiObject {
 
         love.graphics.draw(
             this.image,
-            this.absolutePosition.x,
-            this.absolutePosition.y,
+            this._absolutePosition.x,
+            this._absolutePosition.y,
             0,
             this.scale,
             this.scale)

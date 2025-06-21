@@ -19,7 +19,14 @@ export class TextObject extends TextGuiObject {
         this.size = size;
         this.text = text;
 
-        this.textAbsolutePosition = position.clone();
+        this.textAbsolutePosition = this._absolutePosition.clone();
         this.font = newFont(this.textSize)
+    }
+
+
+
+    public override recalculateAbsolutePosition() {
+        super.recalculateAbsolutePosition();
+        this.textAbsolutePosition = this.absolutePosition.clone()
     }
 }

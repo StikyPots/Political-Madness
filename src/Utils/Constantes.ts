@@ -1,9 +1,15 @@
-import {Rgba} from "./Functions";
+export type RGB = [number, number, number];
+export type RGBA = [number, number, number, number];
 
 export const COLOR = {
-    WHITE: [255,255,255] as [number,number,number],
-    BLACK: [1,1,1] as [number,number,number],
-}
+    WHITE: [255, 255, 255] as RGB,
+    BLACK: [0, 0, 0] as RGB,
+    RED:   [255, 0, 0] as RGB,
+    GREEN: [0, 255, 0] as RGB,
+    BLUE:  [0, 0, 255] as RGB,
+    GRAY:  [255/2, 255/2, 255/2] as RGB,
+    TRANSPARENT: [0, 0, 0, 0] as RGBA
+};
 
 export enum MouseButton {
     LeftMouseButton = 1,

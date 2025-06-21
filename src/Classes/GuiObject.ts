@@ -1,14 +1,15 @@
 import {Vector2} from "./Vector2";
 import {COLOR} from "../Utils/Constantes";
-import {rgbaColor} from "../Utils/Functions";
+import {deepCopy, rgbaColor} from "../Utils/Functions";
 import {RGBA} from "love.math";
+import {TextObject} from "./GuiObjects/TextObject";
 
 export abstract class GuiObject {
     protected abstract _position: Vector2;
     protected abstract _absolutePosition: Vector2;
     public abstract size: Vector2;
 
-    public parent: GuiObject | null = null;
+    private _parent: GuiObject | null = null;
     public color: LuaMultiReturn<RGBA> = rgbaColor(...COLOR.WHITE);
     public visible: boolean = true;
     public fillMode: "line" | "fill" = "fill";
@@ -22,7 +23,6 @@ export abstract class GuiObject {
 
     public set absolutePosition(value: Vector2) {
         this._absolutePosition = value;
-
     }
     public get position(): Vector2 {
         return this._position;
@@ -30,12 +30,27 @@ export abstract class GuiObject {
 
     public set position(value:Vector2) {
         this._position = value;
-        this.absolutePosition = this._updateAbsolutePosition();
+        this.recalculateAbsolutePosition();
     }
 
-    private _updateAbsolutePosition(): Vector2 {
-      return (this.parent?.absolutePosition ?? new Vector2())
-            .add(this.position);
+    public set parent(value: GuiObject | null) {
+
+        if (value === this) {
+            throw Error("invalid parent: cannot set parent to itself");
+        }
+
+        this._parent = value;
+        this.recalculateAbsolutePosition();
+    }
+
+    public get parent(): GuiObject | null {
+        return this._parent;
+    }
+
+
+
+    public recalculateAbsolutePosition() {
+        this.absolutePosition = this._parent?.absolutePosition.add(this._position) ?? this._position;
     }
 
 
@@ -62,8 +77,10 @@ export abstract class GuiObject {
             return;
         }
 
-
         love.graphics.push("all")
+
+
+
 
         love.graphics.setColor(this.color);
         love.graphics.rectangle(
@@ -79,4 +96,9 @@ export abstract class GuiObject {
         love.graphics.pop();
     }
 
+
+
+    public clone() {
+        return deepCopy(this);
+    }
 }

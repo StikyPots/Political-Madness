@@ -34,4 +34,6 @@ export class ImageObject extends ImageGuiObject {
 
     update(dt: number): void {
     }
+
+
 }

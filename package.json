@@ -1,9 +1,10 @@
 {
   "scripts": {
     "start": "love build --console",
-    "build": "npm run build:tstl && npm run build:copy",
+    "build": "npm run build:tstl && npm run build:copy && npm run assets:type",
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "watch": "npm run build:watch",
+    "assets:type": "npx ts-node assets.ts \n",
     "build:tstl": "tstl -p tsconfig.json",
     "build:copy": "copyfiles --all \"res/**/*\" build",
     "build:watch": "tstl -w -p tsconfig.json",
@@ -12,6 +13,7 @@
     "fix:prettier": "prettier \"**/*.{js,ts,ym,md}\" --check --write"
   },
   "devDependencies": {
+    "@types/node": "^24.0.3",
     "@typescript-eslint/eslint-plugin": "^8.5.0",
     "copyfiles": "^2.4.1",
     "eslint": "^9.10.0",

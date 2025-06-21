@@ -69,7 +69,7 @@ export class Vector2 {
     }
 
     public clone() {
-        return new Vector2(this.x, this.y)
+        return new Vector2(this)
     }
     public toString() {
         return `{${this.getX()}, ${this.getY()}}`

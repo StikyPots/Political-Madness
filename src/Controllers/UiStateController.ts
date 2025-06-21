@@ -1,15 +1,21 @@
 import {GameState, MouseButton} from "../Utils/Constantes";
 import {GuiObject} from "../Classes/GuiObject";
 import {ClickableGuiObject} from "../Classes/ClickableGuiObject";
+import {ContainerGuiObject} from "../Classes/ContainerGuiObject";
 
 export class UiStateController {
 
+    //TODO: add a logic to render component trough UiStateController
     private static guiObjectsByState: Map<GameState, GuiObject[]> = new Map()
     private static stateGuiContainers: Map<GuiObject, any> = new Map()
     private static clickableGuiObjects: Map<GameState, ClickableGuiObject[]> = new Map();
     private static currentState: GameState;
 
 
+
+    public static getGuiObjectsInState(state: GameState): GuiObject[] {
+        return this.guiObjectsByState.get(state) || [];
+    }
 
 
     public static setCurrentGameState(state: GameState) {
@@ -48,6 +54,13 @@ export class UiStateController {
 
         if (guiObject instanceof ClickableGuiObject) {
             this.bindGuiObjectClickHandler(guiObject, state)
+        }
+
+
+        if (guiObject instanceof ContainerGuiObject) {
+            for (const child of guiObject.getChildren()) {
+                this.registerGuiObjectToState(child, state)
+            }
         }
 
         guiObjectsState.push(guiObject);
