@@ -5,6 +5,7 @@ import {ContainerGuiObject} from "../Classes/ContainerGuiObject";
 import {GUIState} from "../Classes/GUIState";
 import {StateRegistry} from "./StateRegistry";
 import {warn} from "../Utils/Functions";
+import {getLineWidth} from "love.graphics";
 
 export class UiStateController {
 
@@ -13,6 +14,7 @@ export class UiStateController {
     private static stateGuiContainers: Map<GameState, GUIState> = new Map()
     private static clickableGuiObjects: Map<GameState, ClickableGuiObject[]> = new Map();
     private static currentState: GameState;
+    private static isInit: boolean = false;
 
 
 
@@ -92,6 +94,7 @@ export class UiStateController {
             this.stateGuiContainers.set(tonumber(state), guiState);
             this.registerGuiObjectsForState(tonumber(state), guiState.getInstances())
         }
+        this.isInit = true
     }
 
     public static removeGuiObjectFromState(state: GameState, guiObject: GuiObject): boolean {
@@ -139,6 +142,16 @@ export class UiStateController {
         }
     }
 
-    public static updateCurrentState() {
+    public static updateCurrentState(dt: number): void {
+
+        try {
+            for (const guiObject of this.guiObjectsByState.get(this.currentState) || []) {
+                guiObject.update(dt);
+            }
+
+            this.stateGuiContainers.get(this.currentState).update(dt)
+        } catch (err) {
+            warn(err);
+        }
     }
 }

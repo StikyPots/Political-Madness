@@ -29,8 +29,12 @@ export class TextButton extends ClickableGuiObject {
     }
 
     override set position(position: Vector2) {
-        super.position = position;
+        this._position = position;
         this.textObject.position = new Vector2();
+    }
+
+    get position() {
+        return this._position;
     }
 
     override recalculateAbsolutePosition() {

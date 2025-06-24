@@ -1,5 +1,5 @@
 import {UiStateController} from "./Controllers/UiStateController";
-import {GameState} from "./Utils/Constantes";
+import {ARROW_CURSOR, GameState, HAND_CURSOR} from "./Utils/Constantes";
 import {Vector2} from "./Classes/Vector2";
 import {KeyConstant, Scancode} from "love.keyboard";
 import {ImageButton} from "./Classes/GuiObjects/ImageButton";
@@ -18,7 +18,8 @@ love.load = (): void => {
 }
 
 love.update = (dt: number): void => {
-
+    love.mouse.setCursor(ARROW_CURSOR)
+    UiStateController.updateCurrentState(dt)
 }
 
 

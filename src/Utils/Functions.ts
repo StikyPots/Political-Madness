@@ -12,7 +12,7 @@ export function error(err: ErrorMessage): void {
 }
 export function warn(...args: any[]): void {
     for (const msg of args) {
-        print(`\x27${msg}\x27[0m`)
+        print(`\`\x1b[33m'${msg}'\x1b[0m\``)
     }
 }
 

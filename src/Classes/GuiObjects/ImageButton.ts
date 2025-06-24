@@ -39,6 +39,10 @@ export class ImageButton extends ClickableGuiObject implements ImageGuiObject {
         this.imageObject.position = new Vector2();
     }
 
+     get position() {
+        return this._position;
+     }
+
     override recalculateAbsolutePosition() {
         super.recalculateAbsolutePosition();
         this.imageObject.recalculateAbsolutePosition()

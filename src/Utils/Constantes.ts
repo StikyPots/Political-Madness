@@ -36,6 +36,8 @@ export enum HorizontalTextAlignment {
 }
 
 export const HAND_CURSOR = love.mouse.getSystemCursor("hand")
+export const ARROW_CURSOR = love.mouse.getSystemCursor("arrow")
+
 
 export type ErrorMessage = keyof typeof ERROR_MESSAGE
 
