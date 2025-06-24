@@ -1,6 +1,5 @@
 import {ImageGuiObject} from "../ImageGuiObject";
 import {Vector2} from "../Vector2";
-import {ErrMessage} from "../../Utils/Constantes";
 import {Image, newImage, scale} from "love.graphics";
 
 export class ImageObject extends ImageGuiObject {
@@ -17,7 +16,7 @@ export class ImageObject extends ImageGuiObject {
         super();
 
         if (love.filesystem.getInfo(imageId) === undefined) {
-            throw Error(ErrMessage[0] + imageId)
+            throw Error("" + imageId)
         }
 
         this.scale = scale;

@@ -4,7 +4,7 @@
     "build": "npm run build:tstl && npm run build:copy && npm run assets:type",
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "watch": "npm run build:watch",
-    "assets:type": "npx ts-node assets.ts \n",
+    "assets:type": "npx ts-node scripts/assets.ts \n",
     "build:tstl": "tstl -p tsconfig.json",
     "build:copy": "copyfiles --all \"res/**/*\" build",
     "build:watch": "tstl -w -p tsconfig.json",

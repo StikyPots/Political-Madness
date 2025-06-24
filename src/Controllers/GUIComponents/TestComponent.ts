@@ -3,6 +3,7 @@ import {TextButton} from "../../Classes/GuiObjects/TextButton";
 import {rgbaColor} from "../../Utils/Functions";
 import {COLOR} from "../../Utils/Constantes";
 import {RectangleShape} from "../../Classes/GuiObjects/RectangleShape";
+import {Vector2} from "../../Classes/Vector2";
 
 interface TestComponentProps extends ComponentInstance {
     rect: RectangleShape;
@@ -19,6 +20,7 @@ export class TestComponent extends GUIComponent<TestComponentState, TestComponen
 
     load(): void {
         this.instance.rect.color = rgbaColor(...COLOR.GRAY)
+        this.instance.rect.position = new Vector2(100, 100)
     }
 
     render(): void {

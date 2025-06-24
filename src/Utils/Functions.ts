@@ -1,13 +1,20 @@
 import {RGBA} from "love.math";
 import {AssetPath} from "../Interfaces/res";
-
+import {ERROR_MESSAGE, ErrorMessage} from "./Constantes";
 
 export type Rgba = [number, number, number, number];
 
 export function rgbaColor(r: number, g: number, b: number, a?: number): LuaMultiReturn<RGBA> {
     return love.math.colorFromBytes(r, g, b, a);
 }
-
+export function error(err: ErrorMessage): void {
+    throw new Error(ERROR_MESSAGE[err])
+}
+export function warn(...args: any[]): void {
+    for (const msg of args) {
+        print(`\x27${msg}\x27[0m`)
+    }
+}
 
 export function deepCopy<T>(obj: T): T {
     const seen = new Map<any, any>();
@@ -41,6 +48,19 @@ export function deepCopy<T>(obj: T): T {
     return deepCopy(obj)
 }
 
-export function getResource(path: AssetPath): string {
+export function getAsset(path: AssetPath): string {
     return path
+}
+
+
+export function requireAllStates(): void {
+    const path = "Controllers/GUIStates/"
+    const filesDir: string[] = love.filesystem.getDirectoryItems(path);
+
+    for (const file of filesDir) {
+      if (!file.endsWith(".lua")) {continue}
+
+      const modulePath = "../" + path + file.substring(0, file.length - 4);
+      require(modulePath);
+    }
 }

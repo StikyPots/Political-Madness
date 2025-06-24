@@ -6,36 +6,15 @@ import {ImageButton} from "./Classes/GuiObjects/ImageButton";
 import {Frame} from "./Classes/GuiObjects/Frame";
 import {TestComponent} from "./Controllers/GUIComponents/TestComponent";
 import {RectangleShape} from "./Classes/GuiObjects/RectangleShape";
-import {getAsset} from "node:sea";
-import {getResource} from "./Utils/Functions";
+import {getAsset, requireAllStates} from "./Utils/Functions";
+import {StateRegistry} from "./Controllers/StateRegistry";
+
 
 
 love.load = (): void => {
+    requireAllStates()
+    UiStateController.initializeGuiStates()
     UiStateController.setCurrentGameState(GameState.Menu)
-
-
-    const imageButton = new ImageButton("res/AddToSqud.png", new Vector2())
-    imageButton.position = new Vector2(100, 100)
-
-
-
-
-
-    const testComponent = new TestComponent({
-        rect: new RectangleShape(new Vector2(), new Vector2(100, 100))
-    }, {})
-
-
-    const frame = new Frame(new Vector2(100, 10), new Vector2(100, 100))
-    frame.addChild(imageButton)
-
-    frame.visible = false
-
-
-
-
-    UiStateController.registerGuiObjectsForState(GameState.Menu, testComponent.registerComponent())
-    UiStateController.registerGuiObjectToState(frame, GameState.Menu)
 }
 
 love.update = (dt: number): void => {

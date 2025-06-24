@@ -37,7 +37,8 @@ export enum HorizontalTextAlignment {
 
 export const HAND_CURSOR = love.mouse.getSystemCursor("hand")
 
+export type ErrorMessage = keyof typeof ERROR_MESSAGE
 
-export const ErrMessage: string[] = [
-    "invalid ImageId: "
-]
+export const ERROR_MESSAGE = {
+    filenameNotFound: ""
+}

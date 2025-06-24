@@ -2,12 +2,15 @@ import {GameState, MouseButton} from "../Utils/Constantes";
 import {GuiObject} from "../Classes/GuiObject";
 import {ClickableGuiObject} from "../Classes/ClickableGuiObject";
 import {ContainerGuiObject} from "../Classes/ContainerGuiObject";
+import {GUIState} from "../Classes/GUIState";
+import {StateRegistry} from "./StateRegistry";
+import {warn} from "../Utils/Functions";
 
 export class UiStateController {
 
     //TODO: add a logic to render component trough UiStateController
     private static guiObjectsByState: Map<GameState, GuiObject[]> = new Map()
-    private static stateGuiContainers: Map<GuiObject, any> = new Map()
+    private static stateGuiContainers: Map<GameState, GUIState> = new Map()
     private static clickableGuiObjects: Map<GameState, ClickableGuiObject[]> = new Map();
     private static currentState: GameState;
 
@@ -35,7 +38,9 @@ export class UiStateController {
 
 
     public static registerGuiObjectsForState(state: GameState, guiObjects: GuiObject[]) {
-        const currentContainer = this.guiObjectsByState.get(state) as GuiObject[]
+        const currentContainer = this.guiObjectsByState.get(state) ||
+            this.guiObjectsByState.set(state, []).get(state);
+
 
         for (const guiObject of guiObjects) {
             if (currentContainer.find((obj: GuiObject) => obj === guiObject)) {
@@ -71,6 +76,48 @@ export class UiStateController {
 
         for (const guiObject of guiObjectsToRender) {
             guiObject.draw();
+        }
+    }
+    
+    
+    public static initializeGuiStates() {
+        for (const state of StateRegistry.getAllRegisteredGUIStates()) {
+
+            if (this.stateGuiContainers.has(tonumber(state))) {
+                continue;
+            }
+            const guiState: GUIState = StateRegistry.createGuiState(tonumber(state) as GameState);
+            guiState.load();
+
+            this.stateGuiContainers.set(tonumber(state), guiState);
+            this.registerGuiObjectsForState(tonumber(state), guiState.getInstances())
+        }
+    }
+
+    public static removeGuiObjectFromState(state: GameState, guiObject: GuiObject): boolean {
+        try {
+
+            const currentClickableObj = this.clickableGuiObjects.get(state);
+            const guiObjects = this.guiObjectsByState.get(state);
+
+            const index0 = guiObjects.indexOf(guiObject);
+            const index1 = currentClickableObj.indexOf(guiObject as ClickableGuiObject);
+
+            if (index0 === -1 && index1 === -1) {
+                return false;
+            }
+
+            print(index0, index1, guiObjects.length);
+
+            guiObjects.splice(index0, 1);
+            currentClickableObj.splice(index1, 1);
+
+
+            return true;
+
+        } catch (err) {
+            warn(err);
+            return false;
         }
     }
 

@@ -3,6 +3,7 @@ import {Vector2} from "../Vector2";
 import {ImageGuiObject} from "../ImageGuiObject";
 import {ImageObject} from "./ImageObject";
 import {Image} from "love.graphics";
+import {AssetPath} from "../../Interfaces/res";
 
 export class ImageButton extends ClickableGuiObject implements ImageGuiObject {
     protected _absolutePosition: Vector2;
@@ -14,7 +15,7 @@ export class ImageButton extends ClickableGuiObject implements ImageGuiObject {
     private readonly imageObject: ImageObject;
 
 
-    constructor(imageId: string, position: Vector2, scale: number = 1) {
+    constructor(imageId: AssetPath, position: Vector2, scale: number = 1) {
         super()
 
         this._position = position;

@@ -49,6 +49,7 @@ export abstract class GUIComponent<S extends ComponentState = {}, I extends Comp
         return deepCopy(this)
     }
 
+    //TODO: modify the logic when i added the logic for rendering component from UiStateController
     public registerComponent(): LuaMultiReturn<GuiObject[]> {
         return $multi(...this.getInstance())
     }
