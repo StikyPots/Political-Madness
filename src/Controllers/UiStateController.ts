@@ -6,6 +6,7 @@ import {GUIState} from "../Classes/GUIState";
 import {StateRegistry} from "./StateRegistry";
 import {warn} from "../Utils/Functions";
 import {getLineWidth} from "love.graphics";
+import {GUIComponent} from "../Classes/GUIComponent";
 
 export class UiStateController {
 
@@ -140,6 +141,9 @@ export class UiStateController {
         for (const guiObject of this.clickableGuiObjects.get(this.currentState) || []) {
             guiObject._registerCallbackOnMouseClick(x, y, button, istouch, presses)
         }
+    }
+
+    public bindDebugMenu(component: GUIComponent): void {
     }
 
     public static updateCurrentState(dt: number): void {

@@ -6,8 +6,9 @@ import {ImageButton} from "./Classes/GuiObjects/ImageButton";
 import {Frame} from "./Classes/GuiObjects/Frame";
 import {TestComponent} from "./Controllers/GUIComponents/TestComponent";
 import {RectangleShape} from "./Classes/GuiObjects/RectangleShape";
-import {getAsset, requireAllStates} from "./Utils/Functions";
-import {StateRegistry} from "./Controllers/StateRegistry";
+import {getAsset, requireAllStates, rgbaColor, wait, warn} from "./Utils/Functions";;
+import {Scheduler} from "./Classes/Scheduler";
+import {print} from "love.graphics";
 
 
 
@@ -18,6 +19,8 @@ love.load = (): void => {
 }
 
 love.update = (dt: number): void => {
+    Scheduler.schedule(dt);
+
     love.mouse.setCursor(ARROW_CURSOR)
     UiStateController.updateCurrentState(dt)
 }
@@ -25,6 +28,10 @@ love.update = (dt: number): void => {
 
 love.draw = (): void => {
     UiStateController.drawCurrentState()
+
+
+    print(tostring(love.graphics.getStats().drawcalls), 0, 0)
+    print(tostring(collectgarbage("count") / 1024), 0, 10)
 }
 
 love.keypressed = (key: KeyConstant, scancode:Scancode, isrepeat: boolean) => {

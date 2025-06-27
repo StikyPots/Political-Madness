@@ -1,5 +1,4 @@
 import {ComponentInstance, ComponentState, GUIComponent} from "../../Classes/GUIComponent";
-import {TextButton} from "../../Classes/GuiObjects/TextButton";
 import {rgbaColor} from "../../Utils/Functions";
 import {COLOR} from "../../Utils/Constantes";
 import {RectangleShape} from "../../Classes/GuiObjects/RectangleShape";

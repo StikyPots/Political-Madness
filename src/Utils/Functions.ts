@@ -1,6 +1,6 @@
 import {RGBA} from "love.math";
 import {AssetPath} from "../Interfaces/res";
-import {ERROR_MESSAGE, ErrorMessage} from "./Constantes";
+import {colorize, ERROR_MESSAGE, ErrorMessage} from "./Constantes";
 
 export type Rgba = [number, number, number, number];
 
@@ -8,11 +8,11 @@ export function rgbaColor(r: number, g: number, b: number, a?: number): LuaMulti
     return love.math.colorFromBytes(r, g, b, a);
 }
 export function error(err: ErrorMessage): void {
-    throw new Error(ERROR_MESSAGE[err])
+
 }
 export function warn(...args: any[]): void {
     for (const msg of args) {
-        print(`\`\x1b[33m'${msg}'\x1b[0m\``)
+
     }
 }
 
@@ -63,4 +63,11 @@ export function requireAllStates(): void {
       const modulePath = "../" + path + file.substring(0, file.length - 4);
       require(modulePath);
     }
+}
+
+export function wait(n: number = 0) {
+    let t0: number = os.clock()
+    do {
+        coroutine.yield()
+    } while (os.clock() - t0 < n)
 }

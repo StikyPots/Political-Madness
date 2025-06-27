@@ -18,7 +18,6 @@ export abstract class GUIState  {
     abstract onCreate(): void;
     abstract load(): void;
     abstract draw(): void;
-    abstract update(dt: number): void;
 
     getInstances(): GuiObject[] {
         return this.instances || [];
@@ -48,5 +47,13 @@ export abstract class GUIState  {
         }
     }
 
+
+
+    update(dt: number): void {
+        for (const component of this.components) {
+            component.update(dt);
+        }
+
+    }
 
 }

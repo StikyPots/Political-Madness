@@ -17,7 +17,7 @@ export abstract class GUIComponent<S extends ComponentState = {}, I extends Comp
     protected constructor(instance: I, states: S) {
         this.instance = instance;
         this.states = states;
-        this.load();
+        this.render();
     }
 
 
@@ -37,9 +37,8 @@ export abstract class GUIComponent<S extends ComponentState = {}, I extends Comp
         this._updateQueue = true;
     }
 
-    public update(): void {
+    public update(dt: number): void {
         if (this._updateQueue) {
-            this.load()
             this.render()
             this._updateQueue = false
         }
@@ -54,7 +53,6 @@ export abstract class GUIComponent<S extends ComponentState = {}, I extends Comp
         return $multi(...this.getInstance())
     }
 
-    abstract load(): void;
     abstract render(): void;
 
     //TODO: add more logic for the rendering sys
