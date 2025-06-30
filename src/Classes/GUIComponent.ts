@@ -35,11 +35,12 @@ export abstract class GUIComponent<S extends ComponentState = {}, I extends Comp
     public setState(states: Partial<S>): void {
         this.states = { ...this.states, ...states } as S;
         this._updateQueue = true;
+
+        this.render()
     }
 
     public update(dt: number): void {
         if (this._updateQueue) {
-            this.render()
             this._updateQueue = false
         }
     }

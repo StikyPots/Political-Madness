@@ -11,9 +11,9 @@ export abstract class GuiObject {
 
     private _parent: GuiObject | null = null;
     public color: LuaMultiReturn<RGBA> = rgbaColor(...COLOR.WHITE);
-    public visible: boolean = true;
     public fillMode: "line" | "fill" = "fill";
     public cornerRadius: Vector2 = new Vector2();
+    public visible: boolean = true
 
     public abstract update(dt: number): void
 

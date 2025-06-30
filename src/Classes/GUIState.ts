@@ -3,9 +3,10 @@ import {GuiObject} from "./GuiObject";
 import {RectangleShape} from "./GuiObjects/RectangleShape";
 import {Vector2} from "./Vector2";
 import {GUIComponent} from "./GUIComponent";
+import { TextButton } from "./GuiObjects/TextButton";
 
 
-export abstract class GUIState  {
+export abstract class GUIState {
     state: GameState;
     instances: GuiObject[] = [];
     components: GUIComponent[] = [];
@@ -16,7 +17,9 @@ export abstract class GUIState  {
     }
 
     abstract onCreate(): void;
+
     abstract load(): void;
+
     abstract draw(): void;
 
     getInstances(): GuiObject[] {
@@ -27,11 +30,9 @@ export abstract class GUIState  {
         return this.state;
     }
 
-    createElement<C extends  new (...args: any) => GuiObject>
+    createElement<C extends new (...args: any) => GuiObject>
     (
-        ctor: C,
-        ...properties: ConstructorParameters<C>
-    ): InstanceType<C>
+        TextButton: TextButton, p0: Vector2, p1: Vector2, ctor: C, ...properties: ConstructorParameters<C>    ): InstanceType<C>
     {
         const guiObject = new ctor(...properties) as InstanceType<C>;
         this.instances.push(guiObject);
@@ -53,7 +54,6 @@ export abstract class GUIState  {
         for (const component of this.components) {
             component.update(dt);
         }
-
     }
 
 }

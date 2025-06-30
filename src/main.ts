@@ -28,10 +28,6 @@ love.update = (dt: number): void => {
 
 love.draw = (): void => {
     UiStateController.drawCurrentState()
-
-
-    print(tostring(love.graphics.getStats().drawcalls), 0, 0)
-    print(tostring(collectgarbage("count") / 1024), 0, 10)
 }
 
 love.keypressed = (key: KeyConstant, scancode:Scancode, isrepeat: boolean) => {

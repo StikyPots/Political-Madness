@@ -50,7 +50,7 @@ export class Scheduler {
         } while (os.clock() - t0 <= s)
     }
 
-    public static delay(delay: number, func: (...args: any[]) => void): void {
+    public static delay(delay: number, func: () => void): void {
         Scheduler.spawn((): void => {
             Scheduler.wait(delay);
             func()

@@ -64,14 +64,13 @@ export class UiStateController {
             this.bindGuiObjectClickHandler(guiObject, state)
         }
 
+        guiObjectsState.push(guiObject);
 
         if (guiObject instanceof ContainerGuiObject) {
             for (const child of guiObject.getChildren()) {
                 this.registerGuiObjectToState(child, state)
             }
         }
-
-        guiObjectsState.push(guiObject);
     }
 
     public static drawCurrentState() {

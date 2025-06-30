@@ -6,6 +6,7 @@ export abstract class  ContainerGuiObject extends GuiObject {
     protected abstract _position: Vector2;
     protected abstract children: GuiObject[];
     abstract size: Vector2;
+    private _visible: boolean = true
 
 
     addChild(guiObject: GuiObject): void {
@@ -18,6 +19,8 @@ export abstract class  ContainerGuiObject extends GuiObject {
     getChildren(): GuiObject[] {
         return this.children;
     }
+
+
 
     draw() {
         super.draw();

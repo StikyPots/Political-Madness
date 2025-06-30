@@ -16,7 +16,7 @@ export class Vector2 {
     }
 
     public lenght(): number {
-        return Math.sqrt(this.x ^ 2 + this.y ^ 2)
+        return Math.sqrt(this.x ** 2 + this.y ** 2)
     }
 
     public add(vector: Vector2): Vector2 {
@@ -42,11 +42,11 @@ export class Vector2 {
     }
 
     public magnitude(): number {
-        return (this.x ^ 2 + this.y ^ 2)
+        return (this.x ** 2 + this.y ** 2)
     }
 
     public distanceTo(v: Vector2): number {
-        return Math.sqrt((v.x - this.x) ^ 2 + (v.y - this.x) ^ 2);
+        return Math.sqrt((v.x - this.x) ** 2 + (v.y - this.x) ** 2);
     }
 
     public getX(): number {
