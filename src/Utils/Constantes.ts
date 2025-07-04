@@ -1,3 +1,5 @@
+import {ServiceRegistry} from "../Services/Utils/ServiceRegistry";
+
 export type RGB = [number, number, number];
 export type RGBA = [number, number, number, number];
 
@@ -10,6 +12,7 @@ export const COLOR = {
     GRAY:  [255/2, 255/2, 255/2] as RGB,
     TRANSPARENT: [0, 0, 0, 0] as RGBA
 };
+
 
 export enum MouseButton {
     LeftMouseButton = 1,
@@ -35,34 +38,18 @@ export enum HorizontalTextAlignment {
     Bottom
 }
 
+export const SAVE_FILE_FORMAT = ".dat"
+export const ENCRYPTION_KEY = "g7s8JfQpA4tVx9bL"
+
+export const DATASTORE_NAMES = {
+    PLAYER_DATA: "PLAYER_DATA",
+    SETTING: "SETTING_CONFIG"
+}
+
+export const GAME_VERSION = "0.0.1-alpha"
+
 export const HAND_CURSOR = love.mouse.getSystemCursor("hand")
 export const ARROW_CURSOR = love.mouse.getSystemCursor("arrow")
 
 
-export const colorize = new (class {
-    color = (code: number, ended = false, ...messages: any[]) =>
-        `\x1b[${code}m${messages.join(" ")}${ended ? "\x1b[0m" : ""}`;
-    black = this.color.bind(null, 30, false);
-    red = this.color.bind(null, 31, false);
-    green = this.color.bind(null, 32, false);
-    yellow = this.color.bind(this, 33, true);
-    blue = this.color.bind(this, 34, false);
-    magenta = this.color.bind(this, 35, false);
-    cyan = this.color.bind(this, 36, false);
-    white = this.color.bind(this, 37, true);
-    bgBlack = this.color.bind(this, 40, true);
-    bgRed = this.color.bind(this, 41, true);
-    bgGreen = this.color.bind(this, 42, true);
-    bgYellow = this.color.bind(this, 43, true);
-    bgBlue = this.color.bind(this, 44, true);
-    bgMagenta = this.color.bind(this, 45, true);
-    bgCyan = this.color.bind(this, 46, true);
-    bgWhite = this.color.bind(this, 47, true);
-})();
 
-
-export type ErrorMessage = keyof typeof ERROR_MESSAGE
-
-export const ERROR_MESSAGE = {
-    filenameNotFound: ""
-}

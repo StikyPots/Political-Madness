@@ -13,7 +13,15 @@ export abstract class GuiObject {
     public color: LuaMultiReturn<RGBA> = rgbaColor(...COLOR.WHITE);
     public fillMode: "line" | "fill" = "fill";
     public cornerRadius: Vector2 = new Vector2();
-    public visible: boolean = true
+    private _visible: boolean = true
+
+    public set visible(v: boolean) {
+        this._visible = v;
+    }
+
+    public get visible(): boolean {
+        return this._visible;
+    }
 
     public abstract update(dt: number): void
 
@@ -70,6 +78,17 @@ export abstract class GuiObject {
         return this.cornerRadius
     }
 
+    public isInside(vector: Vector2): boolean {
+        const x: number = vector.x;
+        const y: number = vector.y;
+
+        return (
+            x >= this.absolutePosition.getX() &&
+            x <= this.absolutePosition.getX() + this.size.getX() &&
+            y >= this.absolutePosition.getY() &&
+            y <= this.absolutePosition.getY() + this.size.getY()
+        )
+    }
 
     public draw() {
 

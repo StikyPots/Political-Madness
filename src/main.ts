@@ -1,25 +1,49 @@
 import {UiStateController} from "./Controllers/UiStateController";
-import {ARROW_CURSOR, GameState, HAND_CURSOR} from "./Utils/Constantes";
-import {Vector2} from "./Classes/Vector2";
+import {ARROW_CURSOR, DATASTORE_NAMES, ENCRYPTION_KEY, GameState} from "./Utils/Constantes";
 import {KeyConstant, Scancode} from "love.keyboard";
-import {ImageButton} from "./Classes/GuiObjects/ImageButton";
-import {Frame} from "./Classes/GuiObjects/Frame";
-import {TestComponent} from "./Controllers/GUIComponents/TestComponent";
-import {RectangleShape} from "./Classes/GuiObjects/RectangleShape";
-import {getAsset, requireAllStates, rgbaColor, wait, warn} from "./Utils/Functions";;
+import {printTable, requireAllStates, xorEncrypt} from "./Utils/Functions";
 import {Scheduler} from "./Classes/Scheduler";
-import {print} from "love.graphics";
+import {ServiceRegistry} from "./Services/Utils/ServiceRegistry";
+import {DatastoreService} from "./Services/DatastoreService";
+import {DEFAULT_PLAYER_DATA, DefaultPlayerData} from "./Interfaces/Templates/DefaultPlayerData";
+import {DataStorage} from "./Classes/DataStorage";
+import {Localization} from "./Controllers/Localization";
+import {SETTING_CONFIG, SettingConfig} from "./Interfaces/Templates/Setting";
 
 
 
 love.load = (): void => {
+    love.window.setFullscreen(true)
+
     requireAllStates()
+    ServiceRegistry.init();
+
+    const datastore = ServiceRegistry.getService("DatastoreService");
+
+    const PLAYER_DATA: DataStorage<DefaultPlayerData> = datastore.getDataStorage<DefaultPlayerData>
+    (
+        DATASTORE_NAMES.PLAYER_DATA,
+        DEFAULT_PLAYER_DATA
+    );
+
+    const SETTING_DATA : DataStorage<SettingConfig> = datastore.getDataStorage<SettingConfig>
+    (
+        DATASTORE_NAMES.SETTING,
+        SETTING_CONFIG,
+    )
+    datastore.init();
+
+
+    Localization.setLocalization(SETTING_DATA.get("lang"));
+
     UiStateController.initializeGuiStates()
     UiStateController.setCurrentGameState(GameState.Menu)
 }
 
+
 love.update = (dt: number): void => {
     Scheduler.schedule(dt);
+    ServiceRegistry.bindOnHeartbeat(dt);
 
     love.mouse.setCursor(ARROW_CURSOR)
     UiStateController.updateCurrentState(dt)
@@ -34,7 +58,19 @@ love.keypressed = (key: KeyConstant, scancode:Scancode, isrepeat: boolean) => {
 
 }
 
+love.wheelmoved = (x: number, y: number) => {
+    UiStateController.onWheelMoved(x, y);
+}
+
 
 love.mousepressed = (x: number, y: number, button: number, isTouch: boolean, presses: number) => {
     UiStateController.buttonGuiHandler(x, y, button, isTouch, presses)
+}
+
+love.quit = () => {
+
+   const datastore =  ServiceRegistry.getService("DatastoreService");
+   datastore.saveAll();
+
+    os.exit();
 }

@@ -11,25 +11,34 @@ import {Frame} from "../../Classes/GuiObjects/Frame";
 import {rgbaColor} from "../../Utils/Functions";
 import {HideMenuComponent} from "../GUIComponents/HideMenuComponent";
 import {TextButton} from "../../Classes/GuiObjects/TextButton";
+import {ScrollingFrame} from "../../Classes/GuiObjects/ScrollingFrame";
+import {GuiObject} from "../../Classes/GuiObject";
+import {Localization} from "../Localization";
+import {MenuComponent} from "../GUIComponents/MenuComponent";
 
 
 @registerGuiState(GameState.Menu)
 export class Menu extends GUIState {
     load(): void {
-        const hideMenu = new HideMenuComponent(
+        const menuComponent = new MenuComponent
+        (
             {
-                hideButton: new TextButton("x", new Vector2(), new Vector2(15,15)),
-                window: new Column(new Vector2(15,15),  [
-                    new TextObject("Hello, World", new Vector2(), new Vector2(120, 50)),
-                    new TextObject("Hello, World", new Vector2(), new Vector2(120, 50))
-                ])
+                Column: new Column(
+                    new Vector2(0, 0),
+
+                    [
+                        new TextObject("", new Vector2(), new Vector2(350, 100)),
+                        new TextButton("", new Vector2(), new Vector2(350,50)),
+                        new TextButton("", new Vector2(), new Vector2(350,50)),
+                        new TextButton("", new Vector2(), new Vector2(350,50)),
+                        new TextButton("", new Vector2(), new Vector2(350,50)),
+                    ]
+                )
             },
-            {
-                isHide: false,
-            }
+            {}
         )
 
-        this.setComponent(hideMenu);
+        this.setComponent(menuComponent);
     }
 
     onCreate(): void {

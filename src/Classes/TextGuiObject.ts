@@ -23,10 +23,14 @@ export abstract class TextGuiObject extends GuiObject {
     private _horizontalAlignment: HorizontalTextAlignment = HorizontalTextAlignment.Top;
 
 
-    set position(value: Vector2) {
-        this._position = value;
+     override set position(value: Vector2) {
+        super.position = value;
         this.recalculateAbsolutePosition()
-        this.textAbsolutePosition = this.absolutePosition;
+        this.textAbsolutePosition = this.absolutePosition.clone();
+    }
+
+    override get position(): Vector2 {
+         return super.position;
     }
 
 
@@ -78,6 +82,7 @@ export abstract class TextGuiObject extends GuiObject {
 
         love.graphics.push("all")
         love.graphics.setFont(this.font)
+
         love.graphics.printf(
             [this.textColor, this.text],
             this.textAbsolutePosition.x,

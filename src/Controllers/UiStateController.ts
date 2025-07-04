@@ -7,6 +7,7 @@ import {StateRegistry} from "./StateRegistry";
 import {warn} from "../Utils/Functions";
 import {getLineWidth} from "love.graphics";
 import {GUIComponent} from "../Classes/GUIComponent";
+import {ScrollingFrame} from "../Classes/GuiObjects/ScrollingFrame";
 
 export class UiStateController {
 
@@ -14,8 +15,8 @@ export class UiStateController {
     private static guiObjectsByState: Map<GameState, GuiObject[]> = new Map()
     private static stateGuiContainers: Map<GameState, GUIState> = new Map()
     private static clickableGuiObjects: Map<GameState, ClickableGuiObject[]> = new Map();
+    private static wheelMovedGuiObjects: Map<GameState, ScrollingFrame[]> = new Map();
     private static currentState: GameState;
-    private static isInit: boolean = false;
 
 
 
@@ -64,6 +65,10 @@ export class UiStateController {
             this.bindGuiObjectClickHandler(guiObject, state)
         }
 
+        if (guiObject instanceof ScrollingFrame) {
+            this.bindGuiObjectToWheelHandler(guiObject, state)
+        }
+
         guiObjectsState.push(guiObject);
 
         if (guiObject instanceof ContainerGuiObject) {
@@ -77,7 +82,14 @@ export class UiStateController {
         const guiObjectsToRender: GuiObject[] = this.guiObjectsByState.get(this.currentState) || []
 
         for (const guiObject of guiObjectsToRender) {
+
+            if (guiObject.parent !== undefined && guiObject.parent instanceof ContainerGuiObject) {
+                continue;
+            }
+
+            love.graphics.push()
             guiObject.draw();
+            love.graphics.pop()
         }
     }
     
@@ -94,7 +106,6 @@ export class UiStateController {
             this.stateGuiContainers.set(tonumber(state), guiState);
             this.registerGuiObjectsForState(tonumber(state), guiState.getInstances())
         }
-        this.isInit = true
     }
 
     public static removeGuiObjectFromState(state: GameState, guiObject: GuiObject): boolean {
@@ -126,7 +137,7 @@ export class UiStateController {
 
 
     private static bindGuiObjectClickHandler(guiObject: ClickableGuiObject, state: GameState) {
-        if (this.clickableGuiObjects.get(state) === undefined) {
+        if (!this.clickableGuiObjects.has(state)) {
             this.clickableGuiObjects.set(state, [])
         }
 
@@ -135,10 +146,25 @@ export class UiStateController {
     }
 
 
+    private static bindGuiObjectToWheelHandler(guiObject: ScrollingFrame, state: GameState): void {
+        if (!this.wheelMovedGuiObjects.has(state)) {
+            this.wheelMovedGuiObjects.set(state, [])
+        }
+
+        const wheelGuiObjets: ScrollingFrame[] = this.wheelMovedGuiObjects.get(state)
+        wheelGuiObjets.push(guiObject)
+    }
+
 
     public static buttonGuiHandler(x: number, y:number, button: MouseButton, istouch: boolean, presses: number) {
         for (const guiObject of this.clickableGuiObjects.get(this.currentState) || []) {
             guiObject._registerCallbackOnMouseClick(x, y, button, istouch, presses)
+        }
+    }
+
+    public static onWheelMoved(dx: number, dy: number): void {
+        for (const scrollingFrame of this.wheelMovedGuiObjects.get(this.currentState) || []) {
+            scrollingFrame.onWheelMove(dx, dy);
         }
     }
 

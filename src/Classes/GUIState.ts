@@ -30,15 +30,18 @@ export abstract class GUIState {
         return this.state;
     }
 
-    createElement<C extends new (...args: any) => GuiObject>
+    createElement<C extends  new (...args: any) => GuiObject>
     (
-        TextButton: TextButton, p0: Vector2, p1: Vector2, ctor: C, ...properties: ConstructorParameters<C>    ): InstanceType<C>
+        ctor: C,
+        ...properties: ConstructorParameters<C>
+    ): InstanceType<C>
     {
         const guiObject = new ctor(...properties) as InstanceType<C>;
         this.instances.push(guiObject);
 
         return guiObject;
     }
+
 
     setComponent(...components: GUIComponent[]): void {
         this.components.push(...components);
@@ -47,7 +50,6 @@ export abstract class GUIState {
             this.instances.push(...component.getInstance());
         }
     }
-
 
 
     update(dt: number): void {

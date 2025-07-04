@@ -15,7 +15,7 @@ export class Vector2 {
         }
     }
 
-    public lenght(): number {
+    public length(): number {
         return Math.sqrt(this.x ** 2 + this.y ** 2)
     }
 

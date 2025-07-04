@@ -5,18 +5,6 @@ import {HAND_CURSOR, MouseButton} from "../Utils/Constantes";
 export abstract class ClickableGuiObject extends GuiObject {
     private callbackContainer: Map<MouseButton, () => void> = new Map()
 
-    public isInside(vector: Vector2) {
-        const x: number = vector.x;
-        const y: number = vector.y;
-
-        return (
-            x >= this.absolutePosition.getX() &&
-            x <= this.absolutePosition.getX() + this.size.getX() &&
-            y >= this.absolutePosition.getY() &&
-            y <= this.absolutePosition.getY() + this.size.getY()
-        )
-    }
-
     public update(dt: number) {
         const mouseX: number = love.mouse.getX();
         const mouseY: number = love.mouse.getY();

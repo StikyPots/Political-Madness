@@ -1,4 +1,4 @@
-import {warn} from "../Utils/Functions";
+import {error, warn} from "../Utils/Functions";
 
 export enum ScheduleThreadState {
     running,
@@ -37,12 +37,12 @@ export class Scheduler {
             const [success, ok] = coroutine.resume(thread, ...threadObj.args);
 
             if (!success) {
-                warn(ok, thread);
+                error(debug.traceback(thread, ok));
             }
         }
     }
 
-    public static wait(s: number): void {
+    public static wait(s: number = os.clock()): void {
         const t0: number = os.clock();
 
         do {

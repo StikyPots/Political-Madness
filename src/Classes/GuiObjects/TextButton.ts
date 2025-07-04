@@ -12,7 +12,8 @@ export class TextButton extends ClickableGuiObject {
     protected _absolutePosition: Vector2;
     protected _position: Vector2;
     public size: Vector2;
-    private text: string; //TODO: add the logic to change dynamically the text
+    private _text: string; //TODO: add the logic to change dynamically the text
+
 
     private textObject: TextObject;
 
@@ -22,20 +23,35 @@ export class TextButton extends ClickableGuiObject {
         this._absolutePosition = position;
         this._position = position;
         this.size = size;
-        this.text = text;
+        this._text = text;
 
         this.textObject = new TextObject(text, new Vector2(), size);
         this.textObject.parent = this;
     }
 
     override set position(position: Vector2) {
-        this._position = position;
+       super.position = position;
         this.textObject.position = new Vector2();
     }
 
-    get position() {
-        return this._position;
+    public override get visible(): boolean {
+        return this.textObject.visible;
     }
+
+    public override set visible(v: boolean) {
+        this.textObject.visible = v;
+    }
+
+
+    public set text(value: string) {
+        this._text = value;
+        this.textObject.text = value;
+    }
+
+    public get text(): string {
+        return this.textObject.text
+    }
+
 
     override recalculateAbsolutePosition() {
         super.recalculateAbsolutePosition();

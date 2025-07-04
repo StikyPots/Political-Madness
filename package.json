@@ -1,10 +1,11 @@
 {
   "scripts": {
     "start": "love build --console",
-    "build": "npm run build:tstl && npm run build:copy && npm run assets:type",
+    "build": "npm run build:tstl && npm run build:copy && npm run assets:type && npm run services:type",
     "lint": "npm run lint:prettier && npm run lint:eslint",
-    "watch": "npm run build:watch",
+    "watch": "npm run build:watch && npm run assets:type && npm run services:type",
     "assets:type": "npx ts-node scripts/assets.ts \n",
+    "services:type": "npx ts-node scripts/generateServiceMap.ts \n",
     "build:tstl": "tstl -p tsconfig.json",
     "build:copy": "copyfiles --all \"res/**/*\" build",
     "build:watch": "tstl -w -p tsconfig.json",
