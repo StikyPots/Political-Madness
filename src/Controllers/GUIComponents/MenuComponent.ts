@@ -3,11 +3,10 @@ import {Column} from "../../Classes/GuiObjects/Column";
 import {TextButton} from "../../Classes/GuiObjects/TextButton";
 import {TextObject} from "../../Classes/GuiObjects/TextObject";
 import {GuiObject} from "../../Classes/GuiObject";
-import {Vector2} from "../../Classes/Vector2";
 import {Localization} from "../Localization";
-import {COLOR, HorizontalTextAlignment} from "../../Utils/Constantes";
+import {COLOR, GameState, HorizontalTextAlignment, MouseButton} from "../../Utils/Constantes";
 import {rgbaColor} from "../../Utils/Functions";
-import {getHeight} from "love.graphics";
+import {UiStateController} from "../UiStateController";
 
 export interface MenuComponentProps extends ComponentInstance {
     Column: Column;
@@ -43,10 +42,21 @@ export class MenuComponent extends GUIComponent<MenuComponentState, MenuComponen
         titleText.textColor = rgbaColor(...COLOR.WHITE);
         titleText.visible = false;
 
+
         playBtn.text = Localization.get("play")
         cardsBtn.text = Localization.get("cards")
         settingBtn.text = Localization.get("setting")
         existBtn.text = Localization.get("leave");
+
+
+        settingBtn.onMouseClick(MouseButton.LeftMouseButton, () => {
+            UiStateController.setCurrentGameState(GameState.Setting);
+        });
+
+        existBtn.onMouseClick(MouseButton.LeftMouseButton, () => {
+            love.quit();
+        });
+
 
 
         for (const child of children) {
@@ -60,7 +70,6 @@ export class MenuComponent extends GUIComponent<MenuComponentState, MenuComponen
             obj.textSize = 24;
             obj.alignMode = "center";
             obj.horizontalAlignment = HorizontalTextAlignment.Center;
-
             obj.visible = false;
         }
     }

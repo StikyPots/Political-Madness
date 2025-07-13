@@ -8,7 +8,6 @@ import {RectangleShape} from "../../Classes/GuiObjects/RectangleShape";
 import {random} from "love.math";
 import {Column} from "../../Classes/GuiObjects/Column";
 import {Frame} from "../../Classes/GuiObjects/Frame";
-import {rgbaColor} from "../../Utils/Functions";
 import {HideMenuComponent} from "../GUIComponents/HideMenuComponent";
 import {TextButton} from "../../Classes/GuiObjects/TextButton";
 import {ScrollingFrame} from "../../Classes/GuiObjects/ScrollingFrame";
@@ -24,7 +23,7 @@ export class Menu extends GUIState {
         (
             {
                 Column: new Column(
-                    new Vector2(0, 0),
+                    new Vector2(0, (love.graphics.getHeight() - 350) / 2),
 
                     [
                         new TextObject("", new Vector2(), new Vector2(350, 100)),
@@ -46,9 +45,11 @@ export class Menu extends GUIState {
 
     update(dt: number): void {
         super.update(dt);
-    }
 
+    
+      }
     override draw(): void {
+
     }
 
 }

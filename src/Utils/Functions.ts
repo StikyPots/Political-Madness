@@ -1,5 +1,5 @@
 import {RGBA} from "love.math";
-import {AssetPath} from "../Interfaces/res";
+import {AssetPath} from "../Types/res";
 import {Vector2} from "../Classes/Vector2";
 import {Scheduler} from "../Classes/Scheduler";
 import {print} from "love.graphics";
@@ -109,12 +109,20 @@ export function printTable(obj: any, indent: number = 0): string {
         return `{ ${items.join(", ")} }`;
     }
 
+    if (typeof obj === "function") {
+        const info = debug.getinfo(obj);
+        const name = info.name ?? "<anonymous>"
+
+        return `<function ${name}>`
+    }
+
     if (typeof obj === "object") {
         const entries = Object.entries(obj).map(([key, value]) => {
             return `${spacing}  ${key} = ${printTable(value, indent + 1)}`;
         });
         return `{\n${entries.join(",\n")}\n${spacing}}`;
     }
+
 
     return "nil"; // fallback
 }

@@ -1,5 +1,5 @@
 import {GuiObject} from "./GuiObject";
-import {deepCopy} from "../Utils/Functions";
+import {deepCopy, printTable} from "../Utils/Functions";
 
 export interface ComponentState {
     [key: string]: any;
@@ -47,6 +47,22 @@ export abstract class GUIComponent<S extends ComponentState = {}, I extends Comp
 
     public clone() {
         return deepCopy(this)
+    }
+
+    /**
+     * @deprecated Use `nothing` instead.
+     */
+    createElement<C extends  new (...args: any) => GuiObject>
+    (
+        name: string,
+        ctor: C,
+        ...properties: ConstructorParameters<C>
+    ): InstanceType<C>
+    {
+        const guiObject = new ctor(...properties) as InstanceType<C>;
+        print(printTable(this.instance));
+
+        return guiObject;
     }
 
     //TODO: modify the logic when i added the logic for rendering component from UiStateController

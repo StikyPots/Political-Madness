@@ -1,99 +1,128 @@
-import {error, warn} from "../Utils/Functions";
+import { error, warn } from "../Utils/Functions";
 
 export enum ScheduleThreadState {
-    running,
-    pause,
-    dead
+  running,
+  pause,
+  dead
 }
 
 export interface ScheduleThread {
-    thread: LuaThread;
-    args: any[];
-    state: ScheduleThreadState;
+  thread: LuaThread;
+  args: any[];
+  state: ScheduleThreadState;
 }
 
 export class Scheduler {
-    private static runningThread: ScheduleThread[] = [];
+  private static runningThread: ScheduleThread[] = [];
+  private static suspendedThread: ScheduleThread[] = [];
+
+  private static lastDt: number;
 
 
 
-
-    public static schedule(dt: number): void {
-        for (const threadObj of  this.runningThread) {
-
-            const thread: LuaThread = threadObj.thread;
-
-            if (threadObj.state === ScheduleThreadState.pause) {
-                continue
-            }
-
-            if (coroutine.status(thread) === "dead") {
-                const i: number = this.runningThread.indexOf(threadObj);
-                this.runningThread.splice(i, 1);
-                continue;
-            }
+  public static getCurrentRunningThread(): number {
+    return this.runningThread.length;
+  }
 
 
-            const [success, ok] = coroutine.resume(thread, ...threadObj.args);
+  public static schedule(dt: number): void {
+    this.lastDt = dt;
 
-            if (!success) {
-                error(debug.traceback(thread, ok));
-            }
-        }
-    }
+    for (const threadObj of this.runningThread) {
 
-    public static wait(s: number = os.clock()): void {
-        const t0: number = os.clock();
+      const thread: LuaThread = threadObj.thread;
 
-        do {
-            coroutine.yield();
-        } while (os.clock() - t0 <= s)
-    }
+      if (threadObj.state === ScheduleThreadState.pause) {
+        this.suspendedThread.push(threadObj);
+        this.remove(threadObj);
+        continue
+      }
 
-    public static delay(delay: number, func: () => void): void {
-        Scheduler.spawn((): void => {
-            Scheduler.wait(delay);
-            func()
-        })
-    }
-
-
-    public static remove(scheduleThread: ScheduleThread): void {
-       const i: number = this.runningThread.indexOf(scheduleThread)
-
-        if (i === -1) {
-            return;
-        }
-
+      if (coroutine.status(thread) === "dead") {
+        const i: number = this.runningThread.indexOf(threadObj);
         this.runningThread.splice(i, 1);
+        continue;
+      }
+
+
+      const [success, ok] = coroutine.resume(thread, ...threadObj.args);
+
+      if (!success) {
+        error(debug.traceback(thread, ok));
+      }
+    }
+  }
+
+  //base on the love.update function delta time;
+  public static wait(s: number = love.timer.getAverageDelta()): void {
+    let elapsed = 0;
+
+    while (elapsed < s) {
+      coroutine.yield();
+      elapsed += this.lastDt;
+    }
+  }
+
+  public static delay(delay: number, func: () => void): void {
+    Scheduler.spawn((): void => {
+      Scheduler.wait(delay);
+      func()
+    })
+  }
+
+
+  public static remove(scheduleThread: ScheduleThread): void {
+    const i: number = this.runningThread.indexOf(scheduleThread)
+
+    if (i === -1) {
+      return;
     }
 
-    public static pause(scheduleThread: ScheduleThread): void {
-        scheduleThread.state = ScheduleThreadState.pause;
+    this.runningThread.splice(i, 1);
+  }
+
+  public static pause(scheduleThread: ScheduleThread): void {
+    scheduleThread.state = ScheduleThreadState.pause;
+  }
+
+
+  public static getScheduleThread(thread: LuaThread): ScheduleThread | undefined {
+    const sThread = this.runningThread.find((ScheduleThread: ScheduleThread) => thread === ScheduleThread.thread)
+    return sThread;
+  }
+
+
+  public static resume(scheduleThread: ScheduleThread): void {
+    if (scheduleThread.state !== ScheduleThreadState.pause) {
+      warn("unable to resume the thread", scheduleThread.thread);
     }
 
+    const index: number = this.suspendedThread.indexOf(scheduleThread);
+    this.suspendedThread.splice(index, 1);
 
-    public static resume(scheduleThread: ScheduleThread): void {
-        if (scheduleThread.state !== ScheduleThreadState.pause) {
-            warn("unable to resume the thread", scheduleThread.thread);
-        }
-        scheduleThread.state = ScheduleThreadState.running;
+    this.runningThread.push(scheduleThread);
+
+    scheduleThread.state = ScheduleThreadState.running;
+  }
+
+  // is recommended to use non arrow function
+  //@example
+  //```ts
+  //  Scheduler.spawn(func, args1, args2)
+  // ```
+
+  public static spawn<T extends any[]>(fn: (...args: T) => void, ...args: T): ScheduleThread {
+    const scheduleThread: ScheduleThread = {
+      thread: coroutine.create(fn),
+      args: args,
+      state: ScheduleThreadState.running,
     }
 
-    // is recommended to use non arrow function
-    //@example
-    //```ts
-    //  Scheduler.spawn(func, args1, args2)
-    // ```
+    if (this.runningThread.find((t) => t.thread === scheduleThread.thread)) return;
 
-    public static spawn<T extends any[]>(fn: (...args: T) => void, ...args: T): void {
-        const scheduleThread: ScheduleThread = {
-            thread: coroutine.create(fn),
-            args: args,
-            state: ScheduleThreadState.running,
-        }
+    coroutine.resume(scheduleThread.thread, ...args);
+    this.runningThread.push(scheduleThread);
 
-        coroutine.resume(scheduleThread.thread, ...args);
-        this.runningThread.push(scheduleThread);
-    }
+    return scheduleThread;
+  }
 }

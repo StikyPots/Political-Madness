@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 const assetDir = "res";
-const outPath = "src/Interfaces/res.d.ts";
+const outPath = "src/Types/res.d.ts";
 
 function getAllFiles(dir: string, prefix = ""): string[] {
     return fs.readdirSync(dir).flatMap(file => {

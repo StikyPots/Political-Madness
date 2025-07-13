@@ -26,8 +26,8 @@ export abstract class GUIState {
         return this.instances || [];
     }
 
-    getState(): GameState {
-        return this.state;
+    public getState(): string {
+        return GameState[this.state];
     }
 
     createElement<C extends  new (...args: any) => GuiObject>
@@ -43,12 +43,17 @@ export abstract class GUIState {
     }
 
 
-    setComponent(...components: GUIComponent[]): void {
+    public setComponent(...components: GUIComponent[]): void {
         this.components.push(...components);
 
         for (const component of components) {
             this.instances.push(...component.getInstance());
         }
+    }
+
+
+    public getComponent<C extends GUIComponent>(componentClass: new (...args: any[]) => C): C | undefined {
+        return this.components.find((comp): comp is C => comp instanceof componentClass);
     }
 
 

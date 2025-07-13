@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const serviceDir = path.join(__dirname, '../src/Services');
-const outputFile = path.join(__dirname, '../src/Interfaces/Services.ts');
+const outputFile = path.join(__dirname, '../src/Types/Services.ts');
 
 if (!fs.existsSync(serviceDir)) {
     throw new Error(`Service directory not found: ${serviceDir}`);

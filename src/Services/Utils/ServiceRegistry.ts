@@ -3,7 +3,7 @@ import {Scheduler} from "../../Classes/Scheduler";
 import {FileInfo} from "love.filesystem";
 import {error, printTable, warn} from "../../Utils/Functions";
 import {TestService} from "../TestService";
-import {Services} from "../../Interfaces/Services";
+import {Services} from "../../Types/Services";
 
 export interface ServiceProperty {
     loadOrder: number;
@@ -80,7 +80,7 @@ export class ServiceRegistry {
 
     public static bindOnHeartbeat(dt: number): void {
         for (const heartbeat of this.onHeartbeatService) {
-          try { Scheduler.spawn(heartbeat.heartbeat, dt) } catch (e) { error("ok") }
+          try { Scheduler.spawn(heartbeat.heartbeat, dt) } catch (e) { error(e) }
         }
     }
 

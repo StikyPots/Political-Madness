@@ -4,10 +4,11 @@ import {ClickableGuiObject} from "../Classes/ClickableGuiObject";
 import {ContainerGuiObject} from "../Classes/ContainerGuiObject";
 import {GUIState} from "../Classes/GUIState";
 import {StateRegistry} from "./StateRegistry";
-import {warn} from "../Utils/Functions";
+import {error, warn} from "../Utils/Functions";
 import {getLineWidth} from "love.graphics";
 import {GUIComponent} from "../Classes/GUIComponent";
 import {ScrollingFrame} from "../Classes/GuiObjects/ScrollingFrame";
+import {Scheduler} from "../Classes/Scheduler";
 
 export class UiStateController {
 
@@ -91,6 +92,9 @@ export class UiStateController {
             guiObject.draw();
             love.graphics.pop()
         }
+
+        if (!this.stateGuiContainers.has(this.currentState)) { return }
+        this.stateGuiContainers.get(this.currentState).draw();
     }
     
     
@@ -173,14 +177,28 @@ export class UiStateController {
 
     public static updateCurrentState(dt: number): void {
 
+        //TODO: bracket inside a thread to stop the thread is need
         try {
             for (const guiObject of this.guiObjectsByState.get(this.currentState) || []) {
                 guiObject.update(dt);
             }
 
-            this.stateGuiContainers.get(this.currentState).update(dt)
-        } catch (err) {
-            warn(err);
-        }
+            const thread = Scheduler.spawn(() => {
+                try {
+
+                    if (!this.stateGuiContainers.has(this.currentState)) { return }
+                    this.stateGuiContainers.get(this.currentState).update(dt);
+
+                } catch (e) {
+                    error(e);
+                    Scheduler.pause(thread);
+                }
+            })
+
+        } catch (err) { error(err, debug.traceback()); }
+    }
+
+    public static getGuiState(id: GameState): GUIState {
+        return this.stateGuiContainers.get(id)
     }
 }

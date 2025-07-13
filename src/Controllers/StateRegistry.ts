@@ -25,7 +25,7 @@ export class StateRegistry {
     }
 
     static getAllRegisteredGUIStates(): string[] {
-        return Object.keys(this.guiStateRegistry) ;
+        return Object.keys(this.guiStateRegistry);
     }
 
 

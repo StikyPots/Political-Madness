@@ -3,7 +3,7 @@ import {Vector2} from "../Vector2";
 import {ImageGuiObject} from "../ImageGuiObject";
 import {ImageObject} from "./ImageObject";
 import {Image} from "love.graphics";
-import {AssetPath} from "../../Interfaces/res";
+import {AssetPath} from "../../Types/res";
 
 export class ImageButton extends ClickableGuiObject implements ImageGuiObject {
     protected _absolutePosition: Vector2;
